@@ -42,18 +42,18 @@
     {"rank": "3", "suit": "Harten"},
     {"rank": "2", "suit": "Harten"},
 
-    {"rank": "1", "suit": "Schouten"},
-    {"rank": "R", "suit": "Schouten"},
-    {"rank": "D", "suit": "Schouten"},
-    {"rank": "V", "suit": "Schouten"},
-    {"rank": "10", "suit": "Schouten"},
-    {"rank": "9", "suit": "Schouten"},
-    {"rank": "8", "suit": "Schouten"},
-    {"rank": "7", "suit": "Schouten"},
-    {"rank": "6", "suit": "Schouten"},
-    {"rank": "5", "suit": "Schouten"},
-    {"rank": "4", "suit": "Schouten"},
-    {"rank": "3", "suit": "Schouten"},
-    {"rank": "2", "suit": "Schouten"}
+    {"rank": "1", "suit": "Schoppen"},
+    {"rank": "R", "suit": "Schoppen"},
+    {"rank": "D", "suit": "Schoppen"},
+    {"rank": "V", "suit": "Schoppen"},
+    {"rank": "10", "suit": "Schoppen"},
+    {"rank": "9", "suit": "Schoppen"},
+    {"rank": "8", "suit": "Schoppen"},
+    {"rank": "7", "suit": "Schoppen"},
+    {"rank": "6", "suit": "Schoppen"},
+    {"rank": "5", "suit": "Schoppen"},
+    {"rank": "4", "suit": "Schoppen"},
+    {"rank": "3", "suit": "Schoppen"},
+    {"rank": "2", "suit": "Schoppen"}
   ]
 }
