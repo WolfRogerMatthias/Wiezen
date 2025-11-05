@@ -1,8 +1,7 @@
 import json
 import random
 
-random.seed(42)
-
+# random.seed(42)
 
 def loading_deck():
     with open('deck.json', 'r') as f:
@@ -18,12 +17,27 @@ def initial_deck():
     cards = cards[cut:] + cards[:cut]
     return cards
 
+def show_card(card):
+    nice_card = card['rank']
+    suit = card['suit']
+    match suit:
+        case "Ruiten":
+            nice_card += "♦"
+        case "Harten":
+            nice_card += "♥"
+        case "Klaveren":
+            nice_card += "♣"
+        case "Schoppen":
+            nice_card += "♠"
+    return nice_card
+            
+
 
 def determine_trump_suit(cards):
     """Determine trump suit from the last card in the deck"""
     trump_card = cards[-1]
     trump_suit = trump_card['suit']
-    print(f"🃏 Trump card is: {trump_card['rank']} of {trump_suit}")
+    print(f"🃏 Trump card is: {show_card(trump_card)}")
     print(f"🎯 Trump suit for this round: {trump_suit}")
     return trump_suit
 
@@ -462,7 +476,7 @@ def play_game_round(cards, game_round_number, starting_player):
                         print(f"{player} has no cards in leading suit and no useful trump, playing worst card overall")
 
             trump_indicator = " 🎯" if card_to_play['suit'] == trump_suit else ""
-            print(f"{player}: {card_to_play}{trump_indicator}")
+            print(f"{player}: {show_card(card_to_play)}{trump_indicator}")
             players[player].remove(card_to_play)
             dealt_cards.append(card_to_play)
 
@@ -474,7 +488,7 @@ def play_game_round(cards, game_round_number, starting_player):
         random.shuffle(dealt_cards)
         collected_cards[winner].extend(dealt_cards)
 
-        print(f"\n🏆 {winner} wins this turn and collects 4 cards!")
+        print(f"\n🏆 {winner} wins this turn and collects trick!")
 
         # Rotate player order for next turn
         player_names = rotate_player_order(all_players, winner)
@@ -496,7 +510,7 @@ def play_game_round(cards, game_round_number, starting_player):
             print(f"{player}: {pts:+d} points")
     
     for player in collected_cards:
-        print(f"{player}: {len(collected_cards[player])} cards")
+        print(f"{player}: {int(len(collected_cards[player]) / 4)} tricks")
 
     return round_points, collected_cards
 
