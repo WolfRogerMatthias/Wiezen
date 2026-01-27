@@ -100,12 +100,45 @@ class Game:
 
     def calculate_points(self, mode, team, opponents):
         pts = {p.name: 0 for p in self.players}
+
+        # Total tricks won by the bidding side (could be 1 or 2 players)
+        wins = sum(p.tricks_won for p in team)
+
         if mode == "TEAM":
-            wins = sum(p.tricks_won for p in team)
-            val = (2 + (wins - 8)) if wins >= 8 else -2
-            for p in team: pts[p.name] = val
-            for p in opponents: pts[p.name] = -val
-        # Solo logic omitted for brevity but follows same pattern...
+            # Rule: 'fragen und mitgehen' (2 vs. 2)
+            # Target is 8 tricks. Base points: 2. Each extra trick: +1.
+            target = 8
+            if wins >= target:
+                # Winners get 2 + (extra tricks)
+                base_val = 2 + (wins - target)
+            else:
+                # Losers pay the amount they failed to reach
+                # If they get 7 tricks, they are -1 from target, so they lose 2 (base) + 1 (missing)
+                base_val = -(2 + (target - wins))
+
+            # Distribution: Each winner gets base_val, each opponent pays base_val
+            for p in team: pts[p.name] = base_val
+            for p in opponents: pts[p.name] = -base_val
+
+        elif mode == "SOLO":
+            # Rule: 'alleine gehen' (1 vs. 3)
+            # Target is 5 tricks. Base points: 6. Each extra trick: +3 (1 from each opponent).
+            target = 5
+            if wins >= target:
+                # Solo player gets 6 + 3 for every trick over 5
+                # (Note: The PDF says 6 pts + 3/extra, which means +1 from each of the 3 opponents)
+                total_win_from_all = 6 + (3 * (wins - target))
+            else:
+                # Solo player pays 6 + 3 for every trick they are under 5
+                total_win_from_all = -(6 + (3 * (target - wins)))
+
+            # The Solo player (team[0]) receives/pays the total amount.
+            # The three opponents split the cost/gain equally.
+            solo_player = team[0]
+            pts[solo_player.name] = total_win_from_all
+            for p in opponents:
+                pts[p.name] = -(total_win_from_all / 3)
+
         return pts
 
     def reassemble_deck(self, cards):
