@@ -1,5 +1,3 @@
-import random
-
 class BaselinePlayer:
     def __init__(self, name):
         self.name = name
@@ -22,6 +20,18 @@ class BaselinePlayer:
     def sort_hand(self):
         self.hand.sort(key=lambda c: self.get_rank_value(c['rank']))
 
+    def evaluate_troel(self):
+        counter = 0
+        for card in self.hand:
+            if card['rank'] == '1':
+                counter += 1
+        if counter == 4:
+            return 2
+        elif counter == 3:
+            return 1
+        else:
+            return 0
+
     def filter_suit(self, suit):
         return [c for c in self.hand if c['suit'] == suit]
 
@@ -34,7 +44,7 @@ class BaselinePlayer:
     def decide_bid(self, trump_suit):
         # Implementation of your baseline ruleset logic
         strength = self.evaluate_trump_strength(trump_suit)
-        return "ASK" if strength >= 6 else "PASS"
+        return "ASK" if strength >= 10 else "PASS"
 
     def play_card(self, leading_suit, trump_suit, current_winning_card, is_leading):
         if is_leading:

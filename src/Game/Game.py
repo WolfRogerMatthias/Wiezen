@@ -29,6 +29,46 @@ class Game:
         winner = max(self.total_points, key=self.total_points.get)
         print(f"\nOVERALL WINNER: {winner}!")
 
+    def evaluate_game_mode(self):
+        """
+        Evaluate game mode is the function to decider on how the game is played.
+        priority is the decider on the rule
+        Rules ar the following:
+        Troel has Priority 5 becasue is the game where there is a player with 3 or 4 azen
+
+        Vragen en Meegaan has Priority 1
+        Alleen gaan has Priority 2
+        Abondance has Priority 3
+        Misère has Priority 4
+
+        Misère overt has Priority 6
+        Solo has Priority 7
+        Solo Slim has Priority 8
+
+        The higher priority is what will be played
+        To get the game mode we check each action Incremental, when Troel the priority 1 to 4 will be skipped
+
+        """
+        priority = -1
+        mode = ""
+        team = []
+        opponents = []
+
+        for p in self.players:
+            aces = p.evaluate_troel()
+            if aces > 0:
+                self.resolve_troel_team(p, aces)
+                priority = 5
+
+
+        return 0
+
+    def resolve_troel_team(self, player, aces):
+        if aces == 4:
+            return 0
+        else:
+            return 0
+
     def play_round(self, deck, starting_idx):
         # 4-4-5 Dealing logic
         random.shuffle(deck)
@@ -37,6 +77,15 @@ class Game:
                 idx = (starting_idx + i) % 4
                 self.players[idx].add_cards(deck[:count])
                 deck = deck[count:]
+
+        test = self.evaluate_game_mode()
+
+        for p in self.players:
+            troel = p.evaluate_troel()
+            if troel:
+                break
+
+
 
         trump_card = deck[-1] if deck else self.players[3].hand[-1]
         trump_suit = trump_card['suit']
@@ -53,8 +102,14 @@ class Game:
         mode, team, opponents = self.determine_mode(askers)
         if mode == "REDEAL":
             print("No one played. Redealing...")
-            for p in self.players: p.clear_round_data()
-            return {p.name: 0 for p in self.players}, deck
+
+            # FIX: Collect cards from hands before clearing them
+            collected_before_redeal = []
+            for p in self.players:
+                collected_before_redeal.extend(p.hand)
+                p.clear_round_data()
+
+            return {p.name: 0 for p in self.players}, collected_before_redeal
 
         # Play 13 Tricks
         lead_player_idx = starting_idx
